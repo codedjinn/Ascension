@@ -142,19 +142,28 @@ class Ball : public VisibleObject
 
         static unsigned int count;
     protected:
+        //centre of the circle
         Point* cntrPoint;
+        //interpolated centre of the circle
         Point* intrpPoint;
+        //last location of the centre point
         Point* lastLocation;
+        //segments of the circle
         int circleSegments;
-        //examine how to dynamically size
-        Point* relativeBoundaryPoints[360];
-        float angleStep;
 
+        //examine how to dynamically size according to segments (improve memory usage)
+        Point* relativeBoundaryPoints[360];
+        //degrees of each segment
+        float angleStep;
+        //radius of the circle
         float radius;
 
+        //force applied to circle
         Vector* v;
+        //color of the circle
         Color* c;
 
+        //the dimensions the circle moves in
         BoundedBox* constraints;
 
     private:
