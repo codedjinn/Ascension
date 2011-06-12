@@ -1,0 +1,10 @@
+#Ignore List
+*.cbp
+*.depend
+*.layout
+*.cbTemp
+[bB]in*/
+[oO]bj*/
+*.lib
+*.a
+[lL]ib*/
