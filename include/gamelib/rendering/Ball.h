@@ -322,9 +322,9 @@ public:
             && (this->cntrPoint->getYCoOrd() <= this->lastLocation->getYCoOrd() + POS_TOLLERANCE_LEVEL))) {
 
            if (v->x > POS_TOLLERANCE_LEVEL) {
-               v->x -= 0.025f;
+               v->x -= 0.075f;
            } else if (v->x < NEG_TOLLERANCE_LEVEL) {
-               v->x += 0.025f;
+               v->x += 0.075f;
            } else {
                v->x = 0.0f;
            }
