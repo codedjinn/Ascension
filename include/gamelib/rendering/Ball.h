@@ -59,35 +59,39 @@ class Ball : public VisibleObject
         }
 
         void updatex() {
-            float newx = this->cntrPoint->getXCoOrd() + (v->x);
-            float resultx = constraints->inBoundsX(newx, radius);
-            if (resultx < 0) {
-                if (v->x < 0) {
-                    this->cntrPoint->setXCoOrd(this->cntrPoint->getXCoOrd() - resultx);
+            //check if our next location is in bounds
+            if (!constraints->inBoundsX(this->cntrPoint->getXCoOrd() + (v->x), radius))
+            {
+                //set on boundry before rebound
+                if (v->x > 0) {
+                    this->cntrPoint->setXCoOrd(this->constraints->getRhtBound() - radius);
+                } else {
+                    this->cntrPoint->setXCoOrd(this->constraints->getLftBound() + radius);
                 }
-                if (v->x < 0) {
-                    this->cntrPoint->setXCoOrd(this->cntrPoint->getXCoOrd() + resultx);
-                }
-                v->x *= -1;
+                //rebound if not
+                v->x *= -1.0f;
             } else {
                 this->cntrPoint->setXCoOrd(this->cntrPoint->getXCoOrd() + (v->x));
             }
+
         }
 
         void updatey() {
-            float newy = this->cntrPoint->getYCoOrd() + (v->y);
-            float resulty = constraints->inBoundsY(newy, radius);
-            if (resulty < 0) {
-                if (v->y < 0) {
-                    this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd() - resulty);
+            //check if our next location is in bounds
+            if (!constraints->inBoundsY(this->cntrPoint->getYCoOrd() + (v->y), radius))
+            {
+                //set on boundry before rebound
+                if (v->y > 0) {
+                    this->cntrPoint->setYCoOrd(this->constraints->getTopBound() - radius);
+                } else {
+                    this->cntrPoint->setYCoOrd(this->constraints->getBtmBound() + radius);
                 }
-                if (v->y < 0) {
-                    this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd() + resulty);
-                }
-                v->y *= -1;
+                //rebound if not
+                v->y *= -1.0f;
             } else {
-                this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd()+ (v->y));
+                this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd() + (v->y));
             }
+
         }
 
         //calculates the position of the object between game ticks
@@ -276,63 +280,66 @@ class Ball : public VisibleObject
 class GravityBall : public Ball
 {
 
-    public:
-        GravityBall(float _x, float _y, float _radius, BoundedBox* _bounds, Color* _color):  Ball(_x, _y, _radius, _bounds, _color) {
-            this->v = new Vector(0, 0);
+public:
+    GravityBall(float _x, float _y, float _radius, BoundedBox* _bounds, Color* _color):  Ball(_x, _y, _radius, _bounds, _color) {
+        this->v = new Vector(0, 0);
 
-        }
-        GravityBall(float _x, float _y, float _radius, float vx, float vy, BoundedBox* _bounds, Color* _color):  Ball(_x, _y, _radius, _bounds, _color) {
-            this->v = new Vector(vx, vy);
-        }
+    }
+    GravityBall(float _x, float _y, float _radius, float vx, float vy, BoundedBox* _bounds, Color* _color):  Ball(_x, _y, _radius, _bounds, _color) {
+        this->v = new Vector(vx, vy);
+    }
 
-        void update()
-        {
-            //update the last location before the new move
-            delete this->lastLocation;
-            this->lastLocation = new Point(this->cntrPoint->getXCoOrd(), this->cntrPoint->getYCoOrd());
+    void update()
+    {
+        //update the last location before the new move
+        delete this->lastLocation;
+        this->lastLocation = new Point(this->cntrPoint->getXCoOrd(), this->cntrPoint->getYCoOrd());
 
-            float newx = this->cntrPoint->getXCoOrd() + (v->x);
-            float resultx = constraints->inBoundsX(newx, radius);
-            if (resultx < 0)
+        //apply gravity only untill we are at the source
+        if ((this->cntrPoint->getYCoOrd() - radius) >= (this->constraints->getBtmBound() + POS_TOLLERANCE_LEVEL)) {
+            //decelerate against gravity
+            if (v->y >= 0.0f)
             {
-                if (v->x < 0) {
-                    this->cntrPoint->setXCoOrd(this->cntrPoint->getXCoOrd() - resultx);
-                }
-                if (v->x < 0) {
-                    this->cntrPoint->setXCoOrd(this->cntrPoint->getXCoOrd() + resultx);
-                }
-                v->x *= -0.9;
+                v->y -= GRAVITATIONAL_CONSTANT + 0.1f;      //grav factor + friction factor
+            //accelerate with gravity
             }
-            else
+            else if (v->y < 0.0f)
             {
-                this->cntrPoint->setXCoOrd(this->cntrPoint->getXCoOrd() + (v->x));
-
+                v->y -= GRAVITATIONAL_CONSTANT;
+                v->y += 0.2f;                               //friction factor decelerates
             }
-
-            v->y -= 0.011;
-
-            float newy = this->cntrPoint->getYCoOrd() + (v->y);
-            float resulty = constraints->inBoundsY(newy, radius);
-            if ((((int) resulty) == 0) && (abs(v->y) < 0.11f)) {
-                v->x *=0.993f; //Friction
-            }
-            if (resulty < 0)
-            {
-                if (v->y < 0) {
-                    this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd() - resulty);
-                }
-                if (v->y < 0) {
-                    this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd() + resulty);
-                }
-                v->y *= -0.6;
-            }
-            else if (resulty > 0)
-            {
-                this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd() + (v->y));
-
+        } else {
+            //check the magnitude of the force to see if we can zero it
+            if ((v->y >= NEG_TOLLERANCE_LEVEL && v->y <= POS_TOLLERANCE_LEVEL) && (v->y != 0.0f)) {
+                v->y = 0.0f;
+                this->cntrPoint->setYCoOrd(this->constraints->getBtmBound() + radius);
             }
         }
-    };
+
+        //no movement along the y-axis thus must be on gravity source base
+        if(((this->cntrPoint->getYCoOrd() - radius) <= (this->constraints->getBtmBound() + POS_TOLLERANCE_LEVEL)) &&
+           ((this->cntrPoint->getYCoOrd() >= this->lastLocation->getYCoOrd() - POS_TOLLERANCE_LEVEL)
+            && (this->cntrPoint->getYCoOrd() <= this->lastLocation->getYCoOrd() + POS_TOLLERANCE_LEVEL))) {
+
+           if (v->x > POS_TOLLERANCE_LEVEL) {
+               v->x -= 0.025f;
+           } else if (v->x < NEG_TOLLERANCE_LEVEL) {
+               v->x += 0.025f;
+           } else {
+               v->x = 0.0f;
+           }
+        }
+
+        updatex();
+        updatey();
+    }
+
+protected :
+    //gravitational constant (9.8m/s) div game updates per second
+    static const float GRAVITATIONAL_CONSTANT = 9.8f/15.0f;
+    static const float POS_TOLLERANCE_LEVEL = 1.0f;
+    static const float NEG_TOLLERANCE_LEVEL = -1.0f;
+};
 
 unsigned int Ball::count = 0;
 
