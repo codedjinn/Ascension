@@ -28,23 +28,23 @@ public:
 
     virtual ~BoundedBox() {}
 
-    virtual float inBoundsX(float x, float sx = 0) {
+    virtual bool inBoundsX(float x, float sx = 0) {
         if ((x - sx) < this->getLftBound()) {
-            return abs(this->getLftBound()) + (x - sx);
+            return false;
         } else if ((x + sx) > this->getRhtBound()) {
-            return abs(this->getRhtBound()) - (x + sx);
+            return false;
         } else {
-            return this->getRhtBound() - sx;
+            return true;
         }
     }
 
-    virtual float inBoundsY(float y, float sy = 0) {
+    virtual bool inBoundsY(float y, float sy = 0) {
         if ((y - sy) < this->getBtmBound()) {
-            return abs(this->getBtmBound()) + (y - sy);
+            return false;
         } else if ((y + sy) > this->getTopBound()) {
-            return abs(this->getTopBound()) - (y + sy);
+             return false;
         } else {
-            return this->getTopBound() - sy;
+            return true;
         }
     }
 };

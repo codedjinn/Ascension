@@ -54,8 +54,8 @@ protected:
             this->_btmLeft = new Point (0.0f, 0.0f);
         }
 
-        this->_lftBorder = rctBtmLeft->getYCoOrd();
-        this->_btmBorder = rctBtmLeft->getXCoOrd();
+        this->_lftBorder = rctBtmLeft->getXCoOrd();
+        this->_btmBorder = rctBtmLeft->getYCoOrd();
         this->_rhtBorder = rctTopRight->getXCoOrd();
         this->_topBorder = rctTopRight->getYCoOrd();
     }
