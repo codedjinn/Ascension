@@ -27,25 +27,25 @@ using namespace std;
 class Ball : public VisibleObject, public MoveableObject
 {
     public:
-        Ball(float _x, float _y, float _radius, float corValue, BoundedBox* _boundry, Color* _color):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
+        Ball(float _x, float _y, float _radius, float corValue = MoveableObject::COR_GOLF_BALL, BoundedBox* _boundry, Color* _color):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
             this->v = new Vector(0.0f, 0.0f);
             this->c = _color;
             this->initialise(_x, _y);
         }
 
-        Ball(float _x, float _y, float _radius, float vx, float vy, float corValue, BoundedBox* _boundry, Color* _color):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
+        Ball(float _x, float _y, float _radius, float vx, float vy, float corValue = MoveableObject::COR_GOLF_BALL, BoundedBox* _boundry, Color* _color):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
             this->v = new Vector(vy, vy);
             this->c = _color;
             this->initialise(_x, _y);
         }
 
-        Ball(float _x, float _y, float _radius, float corValue, BoundedBox* _boundry):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
+        Ball(float _x, float _y, float _radius, float corValue = MoveableObject::COR_GOLF_BALL, BoundedBox* _boundry):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
              this->v = new Vector(0.0f, 0.0f);
              this->c = new Color(1.0f, 1.0f, 1.0f);
              this->initialise(_x, _y);
         }
 
-        Ball(float _x, float _y, float _radius, float vx, float vy, float corValue, BoundedBox* _boundry):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
+        Ball(float _x, float _y, float _radius, float vx, float vy, float corValue = MoveableObject::COR_GOLF_BALL, BoundedBox* _boundry):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
             this->v = new Vector(vy, vy);
             this->c = new Color(1.0f, 1.0f, 1.0f);
             this->initialise(_x, _y);
