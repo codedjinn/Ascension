@@ -3,8 +3,9 @@
 *.depend
 *.layout
 *.cbTemp
-[bB]in*/
-[oO]bj*/
 *.lib
 *.a
-[lL]ib*/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+obj*/
