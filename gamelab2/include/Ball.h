@@ -99,7 +99,7 @@ class Ball : public WorldObject
                 glColor3f(c->gRed(),c->gGreen(),c->gBlue());
                 //glVertex3f(x, y , 0);
 
-                for (float angle = 0.0f; angle <= 360.0f; angle += 1.0f) {
+                for (float angle = 0.0f; angle <= 360.0f; angle += 2.0f) {
                     glVertex2f(realX + (radius * _cos[(int)angle]), realY + (radius * _sin[(int)angle]));
                 }
             glEnd();

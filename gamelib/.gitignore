@@ -1,0 +1,11 @@
+#Ignore List
+*.cbp
+*.depend
+*.layout
+*.cbTemp
+*.lib
+*.a
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+obj*/
