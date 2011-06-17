@@ -6,6 +6,7 @@
 
 //Game Lib Includes
 #include "gamelib/physics/Vector.h"
+#include "gamelib/physics/MoveableObject.h"
 #include "gamelib/shapes/Point.h"
 #include "gamelib/rendering/Color.h"
 #include "gamelib/gamesys/VisibleObject.h"
@@ -23,28 +24,28 @@
 
 using namespace std;
 
-class Ball : public VisibleObject
+class Ball : public VisibleObject, public MoveableObject
 {
     public:
-        Ball(float _x, float _y, float _radius, BoundedBox* _boundry, Color* _color):  VisibleObject(),  radius(_radius), constraints(_boundry) {
-            this->v = new Vector();
+        Ball(float _x, float _y, float _radius, float corValue, BoundedBox* _boundry, Color* _color):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
+            this->v = new Vector(0.0f, 0.0f);
             this->c = _color;
             this->initialise(_x, _y);
         }
 
-        Ball(float _x, float _y, float _radius, float vx, float vy, BoundedBox* _boundry, Color* _color):  VisibleObject(), radius(_radius), constraints(_boundry) {
+        Ball(float _x, float _y, float _radius, float vx, float vy, float corValue, BoundedBox* _boundry, Color* _color):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
             this->v = new Vector(vy, vy);
             this->c = _color;
             this->initialise(_x, _y);
         }
 
-        Ball(float _x, float _y, float _radius, BoundedBox* _boundry):  VisibleObject(), radius(_radius), constraints(_boundry) {
-             this->v = new Vector();
+        Ball(float _x, float _y, float _radius, float corValue, BoundedBox* _boundry):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
+             this->v = new Vector(0.0f, 0.0f);
              this->c = new Color(1.0f, 1.0f, 1.0f);
              this->initialise(_x, _y);
         }
 
-        Ball(float _x, float _y, float _radius, float vx, float vy, BoundedBox* _boundry):  VisibleObject(), radius(_radius), constraints(_boundry) {
+        Ball(float _x, float _y, float _radius, float vx, float vy, float corValue, BoundedBox* _boundry):  VisibleObject(), MoveableObject(corValue), radius(_radius), constraints(_boundry) {
             this->v = new Vector(vy, vy);
             this->c = new Color(1.0f, 1.0f, 1.0f);
             this->initialise(_x, _y);
@@ -69,7 +70,7 @@ class Ball : public VisibleObject
                     this->cntrPoint->setXCoOrd(this->constraints->getLftBound() + radius);
                 }
                 //rebound if not
-                v->x *= -1.0f;
+                v->x *= -this->CORValue();
             } else {
                 this->cntrPoint->setXCoOrd(this->cntrPoint->getXCoOrd() + (v->x));
             }
@@ -87,7 +88,7 @@ class Ball : public VisibleObject
                     this->cntrPoint->setYCoOrd(this->constraints->getBtmBound() + radius);
                 }
                 //rebound if not
-                v->y *= -1.0f;
+                v->y *= -this->CORValue();
             } else {
                 this->cntrPoint->setYCoOrd(this->cntrPoint->getYCoOrd() + (v->y));
             }
@@ -281,12 +282,11 @@ class GravityBall : public Ball
 {
 
 public:
-    GravityBall(float _x, float _y, float _radius, BoundedBox* _bounds, Color* _color):  Ball(_x, _y, _radius, _bounds, _color) {
-        this->v = new Vector(0, 0);
-
+    GravityBall(float _x, float _y, float _radius, float _corValue, BoundedBox* _bounds, Color* _color):
+        Ball(_x, _y, _radius, _corValue, _bounds, _color) {
     }
-    GravityBall(float _x, float _y, float _radius, float vx, float vy, BoundedBox* _bounds, Color* _color):  Ball(_x, _y, _radius, _bounds, _color) {
-        this->v = new Vector(vx, vy);
+    GravityBall(float _x, float _y, float _radius, float _vx, float _vy, float _corValue, BoundedBox* _bounds, Color* _color):
+        Ball(_x, _y, _radius, _vx, _vy, _corValue, _bounds, _color) {
     }
 
     void update()

@@ -4,6 +4,8 @@
 #include <vector>
 #include <iostream>
 
+#include "SDL/SDL.h"
+
 #include "gamelib/gamesys/Updateable.h"
 #include "gamelib/gamesys/VisibleObject.h"
 #include "gamelib/rendering/Drawable.h"
@@ -119,15 +121,12 @@ public:
 
     static void toString(GameControl* _controler) {
         using namespace std;
-
-        cout << "GameController ";
-        cout << "(DObj?" << _controler->_hasOnlyDrawables;
-        cout << ",UObj?" << _controler->_hasOnlyUpdateables;
-        cout << ",GObj?" << _controler->_hasGameObjects <<")" << endl;
         cout << "GameController Instance Count " << GameControl::count << endl;
     }
 
+    virtual void processInputEvent(const SDL_Event evnt) = 0;
 protected:
+
     virtual bool initGameControler() = 0;
     virtual bool loadGame() = 0;
 
