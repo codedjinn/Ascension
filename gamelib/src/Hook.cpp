@@ -17,6 +17,7 @@
 
 //Physics Includes
 #include "gamelib/physics/Vector.h"
+#include "gamelib/physics/MoveableObject.h"
 
 //Timing Includes
 #include "gamelib/timing/Chronos.h"
